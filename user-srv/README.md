@@ -53,3 +53,17 @@ Build a docker image
 ```
 make docker
 ```
+
+Test run 
+```
+micro --registry=consul call mu.micro.book.srv.user User.QueryUserByName '{"userName":"micro"}'
+{
+        "success": true,
+        "user": {
+                "id": 10001,
+                "name": "micro",
+                "pwd": "1234"
+        }
+}
+
+```

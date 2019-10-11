@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"github.com/go-log/log"
+	"github.com/micro/go-micro/util/log"
 	"sync"
 	"user-srv/basic/config"
 )

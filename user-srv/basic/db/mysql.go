@@ -2,7 +2,7 @@ package db
 
 import (
 	"database/sql"
-	"log"
+	"github.com/micro/go-micro/util/log"
 	"user-srv/basic/config"
 )
 

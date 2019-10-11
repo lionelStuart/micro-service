@@ -9,7 +9,7 @@ type MysqlConfig interface {
 
 type defaultMysqlConfig struct {
 	URL               string `json:"url"`
-	Enable            bool   `json:"enable"`
+	Enable            bool   `json:"enabled"`
 	MaxIdleConnection int    `json：“maxIdleConnection”`
 	MaxOpenConnection int    `json:"maxOpenConnection"`
 }
