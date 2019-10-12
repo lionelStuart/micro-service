@@ -2,7 +2,7 @@ package user
 
 import (
 	"github.com/go-log/log"
-	"micro-service/user-srv/basic/db"
+	"micro-service/basic/db"
 	proto "micro-service/user-srv/proto/user"
 )
 

@@ -6,9 +6,9 @@ import (
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/registry/consul"
 	"github.com/micro/go-micro/util/log"
-	"micro-service/user-web/basic/config"
+	"micro-service/basic/config"
 
-	"micro-service/user-web/basic"
+	"micro-service/basic"
 
 	"github.com/micro/go-micro/web"
 	"micro-service/user-web/handler"

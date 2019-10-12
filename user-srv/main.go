@@ -5,12 +5,12 @@ import (
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/registry"
-	"micro-service/user-srv/basic/config"
+	"micro-service/basic/config"
 	"micro-service/user-srv/model"
 
 	"github.com/micro/go-micro/registry/consul"
 	"github.com/micro/go-micro/util/log"
-	"micro-service/user-srv/basic"
+	"micro-service/basic"
 	"micro-service/user-srv/handler"
 
 	user "micro-service/user-srv/proto/user"
