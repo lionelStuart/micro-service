@@ -6,12 +6,12 @@ import (
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/registry/consul"
 	"github.com/micro/go-micro/util/log"
-	"user-web/basic/config"
+	"micro-service/user-web/basic/config"
 
-	"user-web/basic"
+	"micro-service/user-web/basic"
 
 	"github.com/micro/go-micro/web"
-	"user-web/handler"
+	"micro-service/user-web/handler"
 )
 
 //complete registry options

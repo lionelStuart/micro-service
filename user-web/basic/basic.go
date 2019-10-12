@@ -1,7 +1,7 @@
 package basic
 
 import (
-	"user-web/basic/config"
+	"micro-service/user-web/basic/config"
 )
 
 func Init() {

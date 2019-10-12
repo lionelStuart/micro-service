@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
-	us "user-srv/model/user"
-	proto "user-srv/proto/user"
+	us "micro-service/user-srv/model/user"
+	proto "micro-service/user-srv/proto/user"
 
 	"github.com/micro/go-micro/util/log"
 )

@@ -5,15 +5,15 @@ import (
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/registry"
-	"user-srv/basic/config"
-	"user-srv/model"
+	"micro-service/user-srv/basic/config"
+	"micro-service/user-srv/model"
 
 	"github.com/micro/go-micro/registry/consul"
 	"github.com/micro/go-micro/util/log"
-	"user-srv/basic"
-	"user-srv/handler"
+	"micro-service/user-srv/basic"
+	"micro-service/user-srv/handler"
 
-	user "user-srv/proto/user"
+	user "micro-service/user-srv/proto/user"
 )
 
 //complete registry options

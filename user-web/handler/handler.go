@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/micro/go-micro/client"
-	proto "user-web/proto/user"
+	proto "micro-service/user-web/proto/user"
 )
 
 var (

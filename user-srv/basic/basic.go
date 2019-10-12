@@ -1,8 +1,8 @@
 package basic
 
 import (
-	"user-srv/basic/config"
-	"user-srv/basic/db"
+	"micro-service/user-srv/basic/config"
+	"micro-service/user-srv/basic/db"
 )
 
 func Init() {
