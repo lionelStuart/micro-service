@@ -20,6 +20,8 @@ var (
 	defaultConfigFilePrefix = "application-"
 	consulConfig            defaultConsulConfig
 	mysqlConfig             defaultMysqlConfig
+	redisConfig             defaultRedisConfig
+	jwtConfig               defaultJwtConfig
 	profiles                defaultProfiles
 	m                       sync.RWMutex
 	inited                  bool
@@ -72,6 +74,8 @@ func Init() {
 	//load consul, mysql
 	config.Get(defaultRootPath, "consul").Scan(&consulConfig)
 	config.Get(defaultRootPath, "mysql").Scan(&mysqlConfig)
+	config.Get(defaultRootPath, "redis").Scan(&redisConfig)
+	config.Get(defaultRootPath, "jwt").Scan(&jwtConfig)
 
 	inited = true
 }
@@ -82,4 +86,12 @@ func GetMysqlConfig() (ret MysqlConfig) {
 
 func GetConsulConfig() (ret ConsulConfig) {
 	return consulConfig
+}
+
+func GetRedisConfig() (ret RedisConfig) {
+	return redisConfig
+}
+
+func GetJwtConfig() (ret JwtConfig) {
+	return jwtConfig
 }
