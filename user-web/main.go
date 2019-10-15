@@ -48,6 +48,7 @@ func main() {
 
 	// register login handler
 	service.HandleFunc("/user/login", handler.Login)
+	service.HandleFunc("/user/logout", handler.Logout)
 
 	// run service
 	if err := service.Run(); err != nil {

@@ -22,10 +22,10 @@ type defaultRedisConfig struct {
 	Password string        `json:"password"`
 	DBNum    int           `json:"dbNum"`
 	Timeout  int           `json:"timeout"`
-	sentinel redisSentinel `json:"sentinel"`
+	Sentinel RedisSentinel `json:"sentinel"`
 }
 
-type redisSentinel struct {
+type RedisSentinel struct {
 	Enabled bool   `json:"enabled"`
 	Master  string `json:"master"`
 	Nodes   string `json:"nodes"`
@@ -49,18 +49,18 @@ func (r defaultRedisConfig) GetDBNum() int {
 }
 
 func (r defaultRedisConfig) GetSentinelConfig() RedisSentinelConfig {
-	return r.sentinel
+	return r.Sentinel
 }
 
-func (r redisSentinel) GetEnabled() bool {
+func (r RedisSentinel) GetEnabled() bool {
 	return r.Enabled
 }
 
-func (r redisSentinel) GetMaster() string {
+func (r RedisSentinel) GetMaster() string {
 	return r.Master
 }
 
-func (r redisSentinel) GetNodes() []string {
+func (r RedisSentinel) GetNodes() []string {
 	if len(r.nodes) != 0 {
 		for _, v := range strings.Split(r.Nodes, ",") {
 			v = strings.TrimSpace(v)

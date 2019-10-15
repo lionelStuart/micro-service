@@ -53,3 +53,18 @@ Build a docker image
 ```
 make docker
 ```
+
+Test User-Srv
+
+```
+micro --registry=consul --api_namespace=mu.micro.book.web api --handler=web
+
+cd user-srv
+go run main.go plugin.go
+
+cd user-web
+go run main.go
+
+cd auth
+go run main.go
+```
