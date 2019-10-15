@@ -67,4 +67,10 @@ go run main.go
 
 cd auth
 go run main.go
+
+# login
+curl --request POST --url http://127.0.0.1:8080/user/login --header "Content-Type: application/x-www-form-urlencoded" --data "userName=micro&pwd=1234"
+# logout
+curl --request POST --url http://127.0.0.1:8080/user/logout --cookie "remember-me-token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzM3NzUyMjQsImp0aSI6IjEwMDAxIiwiaWF0IjoxNTcxMTgzMjI0LCJpc3MiOiJib29rLm1pY3JvLm11IiwibmJmIjoxNTcxMTgzMjI0LCJzdWIiOiIxMDAwMSJ9.rKUDptpHqKwJLqQafgrIXk1AuXz_Dp7aSi3L2ycM1f"
+
 ```
