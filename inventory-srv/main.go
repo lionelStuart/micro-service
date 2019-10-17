@@ -1,32 +1,50 @@
 package main
 
 import (
-	"github.com/micro/go-micro/util/log"
+	"fmt"
+	"github.com/micro/cli"
 	"github.com/micro/go-micro"
-	"inventory-srv/handler"
-	"inventory-srv/subscriber"
+	"github.com/micro/go-micro/registry"
+	"github.com/micro/go-micro/registry/consul"
+	"github.com/micro/go-micro/util/log"
+	"micro-service/basic"
+	"micro-service/basic/config"
+	"micro-service/inventory-srv/handler"
+	"micro-service/inventory-srv/model"
 
-	inventory "inventory-srv/proto/inventory"
+	proto "micro-service/inventory-srv/proto/inventory"
 )
 
+//complete registry options
+func registryOptions(ops *registry.Options) {
+	consulCfg := config.GetConsulConfig()
+	ops.Addrs = []string{
+		fmt.Sprintf("%s:%d", consulCfg.GetHost(), consulCfg.GetPort()),
+	}
+}
+
 func main() {
+	basic.Init()
+
+	micReg := consul.NewRegistry(registryOptions)
+
 	// New Service
 	service := micro.NewService(
 		micro.Name("mu.micro.book.srv.inventory"),
+		micro.Registry(micReg),
 		micro.Version("latest"),
 	)
 
 	// Initialise service
-	service.Init()
+	service.Init(
+		micro.Action(func(c *cli.Context) {
+			model.Init()
+			handler.Init()
+		}),
+	)
 
 	// Register Handler
-	inventory.RegisterInventoryHandler(service.Server(), new(handler.Inventory))
-
-	// Register Struct as Subscriber
-	micro.RegisterSubscriber("mu.micro.book.srv.inventory", service.Server(), new(subscriber.Inventory))
-
-	// Register Function as Subscriber
-	micro.RegisterSubscriber("mu.micro.book.srv.inventory", service.Server(), subscriber.Handler)
+	proto.RegisterInventoryHandler(service.Server(), new(handler.Service))
 
 	// Run service
 	if err := service.Run(); err != nil {
