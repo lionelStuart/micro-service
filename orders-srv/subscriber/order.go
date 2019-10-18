@@ -15,6 +15,6 @@ func Init() {
 	orderService, _ = order.GetService()
 }
 
-func PayOrder(ctx context.Context, string2 string) {
+func PayOrder(ctx context.Context, un interface{}) (err error) {
 	panic("TODO")
 }
