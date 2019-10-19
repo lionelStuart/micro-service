@@ -11,14 +11,12 @@ import (
 
 	"github.com/micro/go-micro/client"
 	auth "micro-service/auth/proto/auth"
-	inv "micro-service/inventory-srv/proto/inventory"
 	orders "micro-service/orders-srv/proto/order"
 )
 
 var (
 	serviceClient orders.OrdersService
 	authClient    auth.Service
-	invClinet     inv.InventoryService
 )
 
 type Error struct {
