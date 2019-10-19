@@ -31,7 +31,7 @@ func (s *Service) MakeAccessToken(ctx context.Context, req *proto.Request, rsp *
 
 	// make accessToken
 	token, err := accessService.MakeAccessToken(&access.Subject{
-		ID:   strconv.FormatUint(req.UserId, 10),
+		ID:   strconv.FormatInt(req.UserId, 10),
 		Name: req.UserName,
 	})
 	if err != nil {
@@ -55,4 +55,22 @@ func (s *Service) DelUserAccessToken(ctx context.Context, req *proto.Request, rs
 
 	return nil
 
+}
+
+func (s *Service) GetCachedAccessToken(ctx context.Context, req *proto.Request, rsp *proto.Response) error {
+	log.Logf("[GetCachedAccessToken] request token: %d", req.UserId)
+
+	token, err := accessService.GetCachedAccessToken(&access.Subject{
+		ID: strconv.FormatInt(req.UserId, 10),
+	})
+	if err != nil {
+		rsp.Error = &proto.Error{
+			Detail: err.Error()}
+
+		log.Logf("[GetCachedAccessToken] request cached token fail err,%s", err)
+		return err
+	}
+
+	rsp.Token = token
+	return nil
 }

@@ -45,4 +45,5 @@ func GetSession(w http.ResponseWriter, r *http.Request) *sessions.Session {
 		ses.ID = sId
 		ses.Save(r, w)
 	}
+	return ses
 }
