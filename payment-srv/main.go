@@ -1,32 +1,50 @@
 package main
 
 import (
-	"github.com/micro/go-micro/util/log"
+	"fmt"
+	"github.com/micro/cli"
 	"github.com/micro/go-micro"
-	"payment-srv/handler"
-	"payment-srv/subscriber"
+	"github.com/micro/go-micro/registry"
+	"github.com/micro/go-micro/registry/consul"
+	"github.com/micro/go-micro/util/log"
+	"micro-service/auth/model"
+	"micro-service/basic"
+	"micro-service/basic/config"
+	"micro-service/payment-srv/handler"
 
-	payment "payment-srv/proto/payment"
+	payment "micro-service/payment-srv/proto/payment"
 )
 
+//complete registry options
+func registryOptions(ops *registry.Options) {
+	consulCfg := config.GetConsulConfig()
+	ops.Addrs = []string{
+		fmt.Sprintf("%s:%d", consulCfg.GetHost(), consulCfg.GetPort()),
+	}
+}
+
 func main() {
+	basic.Init()
+
+	micReg := consul.NewRegistry(registryOptions)
+
 	// New Service
 	service := micro.NewService(
 		micro.Name("mu.micro.book.srv.payment"),
+		micro.Registry(micReg),
 		micro.Version("latest"),
 	)
 
 	// Initialise service
-	service.Init()
+	service.Init(
+		micro.Action(func(context *cli.Context) {
+			model.Init()
+			handler.Init()
+		}),
+	)
 
 	// Register Handler
-	payment.RegisterPaymentHandler(service.Server(), new(handler.Payment))
-
-	// Register Struct as Subscriber
-	micro.RegisterSubscriber("mu.micro.book.srv.payment", service.Server(), new(subscriber.Payment))
-
-	// Register Function as Subscriber
-	micro.RegisterSubscriber("mu.micro.book.srv.payment", service.Server(), subscriber.Handler)
+	payment.RegisterPaymentHandler(service.Server(), new(handler.Service))
 
 	// Run service
 	if err := service.Run(); err != nil {
