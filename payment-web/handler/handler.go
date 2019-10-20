@@ -29,7 +29,7 @@ func Init() {
 }
 
 func PayOrder(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
+	if r.Method != "POST" {
 		log.Logf("invalid request")
 		http.Error(w, "invalid request ", 400)
 	}

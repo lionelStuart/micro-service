@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/micro/go-micro/util/log"
+	"micro-service/plugins/session"
 	"net/http"
 	"time"
 
 	"github.com/micro/go-micro/client"
 	auth "micro-service/auth/proto/auth"
-	us "micro-service/user-web/proto/user"
+	us "micro-service/user-srv/proto/user"
 )
 
 var (
@@ -75,6 +76,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		expire := time.Now().Add(30 * time.Minute)
 		cookie := http.Cookie{Name: "remember-me-token", Value: rsp2.Token, Path: "/", Expires: expire, MaxAge: 90000}
 		http.SetCookie(w, &cookie)
+
+		// update session
+		sess := session.GetSession(w, r)
+		sess.Values["userId"] = rsp.User.Id
+		sess.Values["username"] = rsp.User.Name
+		_ = sess.Save(r, w)
 
 	} else {
 		response["success"] = false

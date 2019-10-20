@@ -57,7 +57,7 @@ func New(w http.ResponseWriter, r *http.Request) {
 		response["orderId"] = rsp.Order.Id
 	}
 
-	w.Header().Add("Content-Type", "application/josn;charset=utf-8")
+	w.Header().Add("Content-Type", "application/json;charset=utf-8")
 
 	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, err.Error(), 500)

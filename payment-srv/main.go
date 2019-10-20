@@ -7,10 +7,10 @@ import (
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/registry/consul"
 	"github.com/micro/go-micro/util/log"
-	"micro-service/auth/model"
 	"micro-service/basic"
 	"micro-service/basic/config"
 	"micro-service/payment-srv/handler"
+	"micro-service/payment-srv/model"
 
 	payment "micro-service/payment-srv/proto/payment"
 )

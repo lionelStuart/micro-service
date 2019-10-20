@@ -11,8 +11,8 @@ import (
 	"micro-service/basic/common"
 	"micro-service/basic/config"
 	"micro-service/orders-srv/handler"
+	"micro-service/orders-srv/model"
 	"micro-service/orders-srv/subscriber"
-	"micro-service/user-srv/model"
 
 	order "micro-service/orders-srv/proto/order"
 )
@@ -32,7 +32,7 @@ func main() {
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("mu.micro.book.srv.order"),
+		micro.Name("mu.micro.book.srv.orders"),
 		micro.Registry(micReg),
 		micro.Version("latest"),
 	)

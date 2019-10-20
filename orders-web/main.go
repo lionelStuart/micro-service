@@ -30,7 +30,7 @@ func main() {
 
 	// create new web service
 	service := web.NewService(
-		web.Name("mu.micro.book.web.order"),
+		web.Name("mu.micro.book.web.orders"),
 		web.Registry(micReg),
 		web.Address(":8091"),
 		web.Version("latest"),

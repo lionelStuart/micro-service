@@ -3,7 +3,8 @@ package payment
 import (
 	"context"
 	"fmt"
-	"github.com/go-log/log"
+
+	"github.com/micro/go-micro/util/log"
 	"micro-service/basic/common"
 	"micro-service/basic/db"
 	inv "micro-service/inventory-srv/proto/inventory"
