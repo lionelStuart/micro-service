@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/micro/go-micro/util/log"
 	"micro-service/basic/common"
-	"micro-service/basic/db"
 	proto "micro-service/inventory-srv/proto/inventory"
+	"micro-service/plugins/db"
 )
 
 func (s service) Sell(bookId, userId int64) (id int64, err error) {

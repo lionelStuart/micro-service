@@ -6,9 +6,9 @@ import (
 
 	"github.com/micro/go-micro/util/log"
 	"micro-service/basic/common"
-	"micro-service/basic/db"
 	inv "micro-service/inventory-srv/proto/inventory"
 	ord "micro-service/orders-srv/proto/order"
+	"micro-service/plugins/db"
 )
 
 func (s *service) PayOrder(orderId int64) (err error) {

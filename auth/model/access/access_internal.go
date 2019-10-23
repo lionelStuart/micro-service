@@ -3,7 +3,6 @@ package access
 import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
-	"micro-service/basic/config"
 	"time"
 )
 
@@ -49,7 +48,7 @@ func (s *service) parseToken(tk string) (c *jwt.StandardClaims, err error) {
 		if !ok {
 			return nil, fmt.Errorf("invalid token format: %v", token.Header["alg"])
 		}
-		return []byte(config.GetJwtConfig().GetSecretKey()), nil
+		return []byte(cfg.SecretKey), nil
 	})
 
 	if err != nil {

@@ -5,6 +5,8 @@ import (
 	"github.com/micro/cli"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-micro/registry/consul"
+	"github.com/micro/go-plugins/config/source/grpc"
+	"micro-service/basic/common"
 
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/util/log"
@@ -16,24 +18,56 @@ import (
 	auth "micro-service/auth/proto/auth"
 )
 
+var (
+	appName = "auth_srv"
+	cfg     = &userCfg{}
+)
+
+type userCfg struct {
+	common.AppCfg
+}
+
+func initCfg() {
+	source := grpc.NewSource(
+		grpc.WithAddress("127.0.0.1:9600"),
+		grpc.WithPath("micro"),
+	)
+	basic.Init(config.WithSource(source))
+
+	err := config.C().App(appName, cfg)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Logf("[initCfg] ,%v", cfg)
+	return
+}
+
 //complete registry options
 func registryOptions(ops *registry.Options) {
-	consulCfg := config.GetConsulConfig()
-	ops.Addrs = []string{
-		fmt.Sprintf("%s:%d", consulCfg.GetHost(), consulCfg.GetPort()),
+	consulCfg := &common.Consul{}
+	err := config.C().App("consul", consulCfg)
+	if err != nil {
+		panic(err)
 	}
+
+	ops.Addrs = []string{
+		fmt.Sprintf("%s:%d", consulCfg.Host, consulCfg.Port),
+	}
+
 }
 
 func main() {
-	basic.Init()
+	//init conf, sql ...
+	initCfg()
 
 	micReg := consul.NewRegistry(registryOptions)
 
 	// New Service
 	service := micro.NewService(
-		micro.Name("mu.micro.book.srv.auth"),
+		micro.Name(cfg.Name),
 		micro.Registry(micReg),
-		micro.Version("latest"),
+		micro.Version(cfg.Version),
 	)
 
 	// Initialise service

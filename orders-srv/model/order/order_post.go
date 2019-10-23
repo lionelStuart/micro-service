@@ -4,8 +4,8 @@ import (
 	"context"
 	"github.com/go-log/log"
 	"micro-service/basic/common"
-	"micro-service/basic/db"
 	inv "micro-service/inventory-srv/proto/inventory"
+	"micro-service/plugins/db"
 )
 
 func (s *service) New(bookId, userId int64) (orderId int64, err error) {

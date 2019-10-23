@@ -1,97 +1,84 @@
 package config
 
 import (
+	"fmt"
 	"github.com/micro/go-micro/config"
-	"github.com/micro/go-micro/config/source"
-	"github.com/micro/go-micro/config/source/file"
 	"github.com/micro/go-micro/util/log"
-	"os"
-	"path/filepath"
-	"strings"
 	"sync"
 )
 
 var (
-	err error
+	m      sync.RWMutex
+	inited bool
+	c      = &configurator{}
 )
 
-var (
-	defaultRootPath         = "app"
-	defaultConfigFilePrefix = "application-"
-	consulConfig            defaultConsulConfig
-	mysqlConfig             defaultMysqlConfig
-	redisConfig             defaultRedisConfig
-	jwtConfig               defaultJwtConfig
-	profiles                defaultProfiles
-	m                       sync.RWMutex
-	inited                  bool
-	sp                      = string(filepath.Separator)
-)
+type Configurator interface {
+	App(name string, config interface{}) (err error)
+}
 
-func Init() {
+type configurator struct {
+	conf config.Config
+}
+
+func (c *configurator) App(name string, config interface{}) (err error) {
+	v := c.conf.Get(name)
+	if v != nil {
+		err = v.Scan(config)
+	} else {
+		err = fmt.Errorf("[App] conf not exists ,%s", name)
+	}
+
+	return
+}
+
+func C() Configurator {
+	return c
+}
+
+func (c *configurator) init(ops Options) (err error) {
 	m.Lock()
 	defer m.Unlock()
 
 	if inited {
-		log.Logf("[Init] conf already inited")
+		log.Logf("[init] config already inited ")
 		return
 	}
 
-	appPath, _ := filepath.Abs(filepath.Dir(filepath.Join("."+sp, sp)))
-
-	pt := filepath.Join(appPath, "conf")
-	os.Chdir(appPath)
-
-	if err = config.Load(file.NewSource(file.WithPath(pt + sp + "application.yml"))); err != nil {
-		panic(err)
+	c.conf = config.NewConfig()
+	err = c.conf.Load(ops.Sources...)
+	if err != nil {
+		log.Fatal(err)
 	}
 
-	//load profiles at start
-	if err = config.Get(defaultRootPath, "profiles").Scan(&profiles); err != nil {
-		panic(err)
-	}
+	go func() {
+		log.Logf("[init] watch config change ")
 
-	log.Logf("[Init] load conf files : path :%s ,%+v \n", pt+sp+"application.yml", profiles)
-
-	// load conf files from include
-	if len(profiles.GetInclude()) > 0 {
-		include := strings.Split(profiles.GetInclude(), ",")
-
-		sources := make([]source.Source, len(include))
-		for i := 0; i < len(include); i++ {
-			filePath := pt + sp + defaultConfigFilePrefix + strings.TrimSpace(include[i]) + ".yml"
-
-			log.Logf("[Init] load conf file path : paht :%s \n", filePath)
-
-			sources[i] = file.NewSource(file.WithPath(filePath))
+		watcher, err := c.conf.Watch()
+		if err != nil {
+			log.Fatal(err)
 		}
 
-		if err = config.Load(sources...); err != nil {
-			panic(err)
-		}
-	}
+		for {
+			v, err := watcher.Next()
+			if err != nil {
+				log.Fatal(err)
+			}
 
-	//load consul, mysql
-	config.Get(defaultRootPath, "consul").Scan(&consulConfig)
-	config.Get(defaultRootPath, "mysql").Scan(&mysqlConfig)
-	config.Get(defaultRootPath, "redis").Scan(&redisConfig)
-	config.Get(defaultRootPath, "jwt").Scan(&jwtConfig)
+			log.Logf("[init] conf changed ,%v", string(v.Bytes()))
+		}
+	}()
 
 	inited = true
+	return
 }
 
-func GetMysqlConfig() (ret MysqlConfig) {
-	return mysqlConfig
-}
+func Init(opts ...Option) {
+	ops := Options{}
+	for _, o := range opts {
+		o(&ops)
+	}
 
-func GetConsulConfig() (ret ConsulConfig) {
-	return consulConfig
-}
-
-func GetRedisConfig() (ret RedisConfig) {
-	return redisConfig
-}
-
-func GetJwtConfig() (ret JwtConfig) {
-	return jwtConfig
+	c = &configurator{}
+	c.init(ops)
 }

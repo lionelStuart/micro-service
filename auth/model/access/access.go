@@ -3,14 +3,17 @@ package access
 import (
 	"fmt"
 	r "github.com/go-redis/redis"
-	"micro-service/basic/redis"
+	"micro-service/basic/config"
+	"micro-service/plugins/jwt"
+	"micro-service/plugins/redis"
 	"sync"
 )
 
 var (
-	s  *service
-	ca *r.Client
-	m  sync.RWMutex
+	s   *service
+	ca  *r.Client
+	m   sync.RWMutex
+	cfg = &jwt.Jwt{}
 )
 
 type service struct {
@@ -28,6 +31,11 @@ func Init() {
 
 	if s != nil {
 		return
+	}
+
+	err := config.C().App("jwt", cfg)
+	if err != nil {
+		panic(err)
 	}
 
 	ca = redis.GetRedis()
