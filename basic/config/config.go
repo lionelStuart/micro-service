@@ -15,10 +15,12 @@ var (
 
 type Configurator interface {
 	App(name string, config interface{}) (err error)
+	Path(path string, config interface{}) (err error)
 }
 
 type configurator struct {
-	conf config.Config
+	conf    config.Config
+	appName string
 }
 
 func (c *configurator) App(name string, config interface{}) (err error) {
@@ -27,6 +29,17 @@ func (c *configurator) App(name string, config interface{}) (err error) {
 		err = v.Scan(config)
 	} else {
 		err = fmt.Errorf("[App] conf not exists ,%s", name)
+	}
+
+	return
+}
+
+func (c *configurator) Path(path string, config interface{}) (err error) {
+	v := c.conf.Get(c.appName, path)
+	if v != nil {
+		err = v.Scan(config)
+	} else {
+		err = fmt.Errorf("[App] conf not exists ,%s", path)
 	}
 
 	return
@@ -46,6 +59,8 @@ func (c *configurator) init(ops Options) (err error) {
 	}
 
 	c.conf = config.NewConfig()
+	c.appName = ops.AppName
+
 	err = c.conf.Load(ops.Sources...)
 	if err != nil {
 		log.Fatal(err)

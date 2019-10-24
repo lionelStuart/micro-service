@@ -6,21 +6,24 @@ import (
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/registry"
 	"github.com/micro/go-plugins/config/source/grpc"
+	"go.uber.org/zap"
 	"micro-service/basic/common"
 	"micro-service/basic/config"
 	"micro-service/user-srv/model"
 
 	"github.com/micro/go-micro/registry/consul"
-	"github.com/micro/go-micro/util/log"
+	//"github.com/micro/go-micro/util/log"
 	"micro-service/basic"
 	"micro-service/user-srv/handler"
 
+	z "micro-service/plugins/zap"
 	user "micro-service/user-srv/proto/user"
 )
 
 var (
 	appName = "user_srv"
 	cfg     = &userCfg{}
+	log     = z.GetLogger()
 )
 
 type userCfg struct {
@@ -39,7 +42,7 @@ func initCfg() {
 		panic(err)
 	}
 
-	log.Logf("[initCfg] ,%v", cfg)
+	log.Info("[initCfg] ", zap.Any("cfg", cfg))
 	return
 }
 
@@ -84,6 +87,6 @@ func main() {
 
 	// Run service
 	if err := service.Run(); err != nil {
-		log.Fatal(err)
+		log.Error("fail load", zap.Any("err", err))
 	}
 }

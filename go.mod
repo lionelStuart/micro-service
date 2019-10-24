@@ -14,4 +14,7 @@ require (
 	github.com/micro/go-micro v1.11.1
 	github.com/micro/go-plugins v1.3.0
 	github.com/nats-io/nats-server/v2 v2.1.0 // indirect
+	go.uber.org/zap v1.10.0
+	google.golang.org/grpc v1.22.1
+	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
