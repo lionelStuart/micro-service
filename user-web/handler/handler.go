@@ -10,6 +10,7 @@ import (
 
 	"github.com/micro/go-micro/client"
 	auth "micro-service/auth/proto/auth"
+	hystrix "micro-service/plugins/hystrix"
 	us "micro-service/user-srv/proto/user"
 )
 
@@ -24,8 +25,10 @@ type Error struct {
 }
 
 func Init() {
-	serviceClient = us.NewUserService("mu.micro.book.srv.user", client.DefaultClient)
-	authClient = auth.NewService("mu.micro.book.srv.auth", client.DefaultClient)
+	hystrix.Init()
+	cl := hystrix.WrapperClient(client.DefaultClient)
+	serviceClient = us.NewUserService("mu.micro.book.srv.user", cl)
+	authClient = auth.NewService("mu.micro.book.srv.auth", cl)
 }
 
 func Login(w http.ResponseWriter, r *http.Request) {

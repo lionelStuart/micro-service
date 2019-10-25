@@ -9,6 +9,7 @@ import (
 	"github.com/micro/go-plugins/config/source/grpc"
 	"micro-service/basic/common"
 	"micro-service/basic/config"
+	"micro-service/plugins/hystrix"
 
 	"micro-service/basic"
 
@@ -82,6 +83,9 @@ func main() {
 	// register login handler
 	service.HandleFunc("/user/login", handler.Login)
 	service.HandleFunc("/user/logout", handler.Logout)
+
+	// hystrix
+	hystrix.StartStreamService("", "81")
 
 	// run service
 	if err := service.Run(); err != nil {
