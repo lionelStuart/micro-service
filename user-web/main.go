@@ -9,7 +9,9 @@ import (
 	"github.com/micro/go-plugins/config/source/grpc"
 	"micro-service/basic/common"
 	"micro-service/basic/config"
+	"micro-service/plugins/breaker"
 	"micro-service/plugins/hystrix"
+	"net/http"
 
 	"micro-service/basic"
 
@@ -81,7 +83,10 @@ func main() {
 	}
 
 	// register login handler
-	service.HandleFunc("/user/login", handler.Login)
+	// add breaker to login method
+	handlerLogin := http.HandlerFunc(handler.Login)
+	service.Handle("/user/login", breaker.BreakerWrapper(handlerLogin))
+
 	service.HandleFunc("/user/logout", handler.Logout)
 
 	// hystrix
