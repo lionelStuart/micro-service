@@ -12,6 +12,7 @@ import (
 	"micro-service/plugins/breaker"
 	"micro-service/plugins/hystrix"
 	"net/http"
+	"time"
 
 	"micro-service/basic"
 
@@ -65,11 +66,15 @@ func main() {
 	micReg := consul.NewRegistry(registryOptions)
 
 	// create new web service
+	// add interval / TTL for health check test
+	// visit http://localhost:8500/ui  --consul to check
 	service := web.NewService(
 		web.Name(cfg.Name),
 		web.Version(cfg.Version),
 		web.Registry(micReg),
 		web.Address(cfg.Addr()),
+		web.RegisterTTL(time.Second*15),
+		web.RegisterInterval(time.Second*10),
 	)
 
 	// initialise service

@@ -27,6 +27,14 @@ type Error struct {
 func Init() {
 	hystrix.Init()
 	cl := hystrix.WrapperClient(client.DefaultClient)
+
+	// use micro-retry
+	cl.Init(client.Retries(3),
+		client.Retry(func(ctx context.Context, req client.Request, retryCount int, err error) (b bool, e error) {
+			log.Log(req.Method(), retryCount, "user-web retry ")
+			return true, nil
+		}))
+
 	serviceClient = us.NewUserService("mu.micro.book.srv.user", cl)
 	authClient = auth.NewService("mu.micro.book.srv.auth", cl)
 }
